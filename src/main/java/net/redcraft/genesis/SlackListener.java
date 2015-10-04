@@ -1,8 +1,10 @@
 package net.redcraft.genesis;
 
 import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
+import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,20 +41,34 @@ public class SlackListener {
             throw new GenesisException("Can't connect to Slack service", e);
         }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                session.getChannels().stream().forEach(slackChannel -> session.joinChannel(slackChannel.getName()));
+            }
+        }).start();
+
         session.addMessagePostedListener(new SlackMessagePostedListener() {
             @Override
             public void onEvent(SlackMessagePosted event, SlackSession session) {
                 Matcher matcher = PATTERN.matcher(event.getMessageContent());
-                while(matcher.find()) {
+                while (matcher.find()) {
                     String url = matcher.group(1);
                     SlackURL red = urlRepository.findOne(url);
-                    if(red == null) {
+                    if (red == null) {
                         urlRepository.save(new SlackURL(url, new Reference(event.getChannel().getName(), new Date())));
                     } else {
                         red.getReferences().add(new Reference(event.getChannel().getName(), new Date()));
                         urlRepository.save(red);
                     }
                 }
+            }
+        });
+
+        session.addchannelCreatedListener(new SlackChannelCreatedListener() {
+            @Override
+            public void onEvent(SlackChannelCreated event, SlackSession session) {
+                session.joinChannel(event.getSlackChannel().getName());
             }
         });
     }
