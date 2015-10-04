@@ -3,6 +3,7 @@ package net.redcraft.genesis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -10,11 +11,11 @@ import java.util.List;
  * Created by RED on 04/10/2015.
  */
 
-@Controller
+@RestController
 public class GenesisAPI {
 
     @Autowired
-    SlackURLRepository urlRepository;
+    private SlackURLRepository urlRepository;
 
     @RequestMapping("/api/link")
     public List<SlackURL> getAllLinks() {
