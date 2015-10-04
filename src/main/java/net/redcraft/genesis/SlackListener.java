@@ -31,9 +31,15 @@ public class SlackListener {
     private String slackAPIKey;
 
     @PostConstruct
-    public void run() throws IOException {
-        SlackSession session = SlackSessionFactory.createWebSocketSlackSession(slackAPIKey);
-        session.connect();
+    public void setupListeners() throws GenesisException {
+
+        SlackSession session;
+        try {
+            session = SlackSessionFactory.createWebSocketSlackSession(slackAPIKey);
+            session.connect();
+        } catch (IOException e) {
+            throw new GenesisException("Can't connect to Slack service", e);
+        }
 
         session.addMessagePostedListener(new SlackMessagePostedListener() {
             @Override
