@@ -2,7 +2,6 @@ package net.redcraft.genesis;
 
 import org.springframework.data.annotation.Id;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +14,12 @@ public class SlackURL {
     private String url;
 
     private List<Reference> references;
+
+    private String title;
+
+    private String description;
+
+    private String imageURL;
 
     public SlackURL() {
     }
@@ -43,5 +48,29 @@ public class SlackURL {
 
     public void setReferences(List<Reference> references) {
         this.references = references;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

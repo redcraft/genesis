@@ -6,6 +6,11 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,7 +27,8 @@ import java.util.regex.Pattern;
 @Component
 public class SlackListener {
 
-    private static Pattern PATTERN = Pattern.compile("<(.+?)>");
+    private static final Logger log = LoggerFactory.getLogger(SlackListener.class);
+    private static final Pattern PATTERN = Pattern.compile("<(http.+?)[>|]");
 
     @Autowired
     private SlackURLRepository urlRepository;
@@ -56,7 +62,25 @@ public class SlackListener {
                     String url = matcher.group(1);
                     SlackURL red = urlRepository.findOne(url);
                     if (red == null) {
-                        urlRepository.save(new SlackURL(url, new Reference(event.getChannel().getName(), new Date())));
+                        SlackURL slackURL = new SlackURL(url, new Reference(event.getChannel().getName(), new Date()));
+                        try {
+                            Document doc = Jsoup.connect(url).get();
+                            Element titleElement = doc.select("title").first();
+                            if(titleElement != null) {
+                                slackURL.setTitle(titleElement.text());
+                            }
+                            Element descriptionElement = doc.select("meta[property=og:description]").first();
+                            if(descriptionElement != null) {
+                                slackURL.setDescription(descriptionElement.attr("content"));
+                            }
+                            Element imageElement = doc.select("meta[property=og:image]").first();
+                            if(imageElement != null) {
+                                slackURL.setImageURL(imageElement.attr("content"));
+                            }
+                        } catch (Exception e) {
+                            log.debug("Can't parse URL", e);
+                        }
+                        urlRepository.save(slackURL);
                     } else {
                         red.getReferences().add(new Reference(event.getChannel().getName(), new Date()));
                         urlRepository.save(red);
