@@ -1,5 +1,8 @@
 package net.redcraft.genesis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
@@ -16,8 +19,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,6 +88,7 @@ public class SlackListener {
                             log.debug("Can't parse URL", e);
                         }
                         urlRepository.save(slackURL);
+                        addToAirTable(slackURL);
                     } else {
                         red.getReferences().add(new Reference(event.getChannel().getName(), new Date()));
                         urlRepository.save(red);
@@ -95,5 +103,39 @@ public class SlackListener {
                 session.joinChannel(event.getSlackChannel().getName());
             }
         });
+    }
+
+    private void addToAirTable(SlackURL slackURL) {
+
+        String url = "https://api.airtable.com/v0/app6e52Oq9b9YqhOQ/everything";
+        try {
+            URL obj = new URL(url);
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Authorization", "Bearer key87AvIr7tSWtQjs");
+            con.setRequestProperty("Content-type", "application/json");
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNodeFactory jsonNodeFactory = JsonNodeFactory.instance;
+            ObjectNode request = jsonNodeFactory.objectNode();
+            request.put("Title", Optional.ofNullable(slackURL.getTitle()).orElse(""))
+                   .put("Link", slackURL.getUrl())
+                   .put("Description", Optional.ofNullable(slackURL.getDescription()).orElse(""))
+                   .put("Date", "2015-09-14T15:53:31.000Z")
+                   .put("channel", slackURL.getReferences().get(0).getChannel());
+            String jsonRequest = mapper.writeValueAsString(jsonNodeFactory.objectNode().set("fields", request));
+            log.debug("Airtable payload: {}", jsonRequest);
+
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(jsonRequest);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            log.debug("Airtable response code: {}", responseCode);
+
+        } catch (Exception e) {
+            log.error("Error posting to Airtable", e);
+        }
     }
 }
