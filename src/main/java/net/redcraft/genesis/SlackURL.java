@@ -2,7 +2,7 @@ package net.redcraft.genesis;
 
 import org.springframework.data.annotation.Id;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,11 +22,6 @@ public class SlackURL {
     private String imageURL;
 
     public SlackURL() {
-    }
-
-    public SlackURL(String url, Reference reference) {
-        this.url = url;
-        this.references = Arrays.asList(reference);
     }
 
     public SlackURL(String url, List<Reference> references) {
