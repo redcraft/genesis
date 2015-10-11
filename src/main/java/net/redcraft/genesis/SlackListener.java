@@ -68,25 +68,27 @@ public class SlackListener {
                         try {
                             Document doc = Jsoup.connect(url).get();
                             Element titleElement = doc.select("title").first();
-                            if(titleElement != null) {
+                            if (titleElement != null) {
                                 slackURL.setTitle(titleElement.text());
                             }
                             Element descriptionElement = doc.select("meta[property=og:description]").first();
-                            if(descriptionElement != null) {
+                            if (descriptionElement != null) {
                                 slackURL.setDescription(descriptionElement.attr("content"));
                             }
                             Element imageElement = doc.select("meta[property=og:image]").first();
-                            if(imageElement != null) {
+                            if (imageElement != null) {
                                 slackURL.setImageURL(imageElement.attr("content"));
                             }
                         } catch (Exception e) {
                             log.debug("Can't parse URL", e);
                         }
                         urlRepository.save(slackURL);
-                        airTable.addRecord(slackURL);
                     }
                     slackURL.getReferences().add(new Reference(event.getChannel().getName(), new Date()));
                     urlRepository.save(slackURL);
+                    if (slackURL.getReferences().size() == 1) {
+                        airTable.addRecord(slackURL);
+                    }
                 }
             }
         });
