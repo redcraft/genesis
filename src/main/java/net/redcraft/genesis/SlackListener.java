@@ -6,6 +6,8 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
+import net.redcraft.genesis.domain.Reference;
+import net.redcraft.genesis.domain.SlackURL;
 import net.redcraft.genesis.utils.AirTable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

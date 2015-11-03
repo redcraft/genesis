@@ -1,4 +1,4 @@
-package net.redcraft.genesis;
+package net.redcraft.genesis.domain;
 
 import java.util.Date;
 

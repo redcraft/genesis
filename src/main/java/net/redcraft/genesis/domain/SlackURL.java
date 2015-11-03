@@ -1,8 +1,7 @@
-package net.redcraft.genesis;
+package net.redcraft.genesis.domain;
 
 import org.springframework.data.annotation.Id;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
