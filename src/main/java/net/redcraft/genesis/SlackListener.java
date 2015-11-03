@@ -61,7 +61,7 @@ public class SlackListener {
         session.addMessagePostedListener(new SlackMessagePostedListener() {
             @Override
             public void onEvent(SlackMessagePosted event, SlackSession session) {
-                Matcher matcher = PATTERN.matcher(event.getMessageContent());
+                Matcher matcher = PATTERN.matcher(event.getMessageContent().toLowerCase());
                 while (matcher.find()) {
                     String url = matcher.group(1).replaceAll("/$", "");
                     SlackURL slackURL = urlRepository.findOne(url);
