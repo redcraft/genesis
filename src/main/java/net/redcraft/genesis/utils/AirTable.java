@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by RED on 11/10/2015.
@@ -28,8 +28,12 @@ public class AirTable {
 
     private static final Logger log = LoggerFactory.getLogger(AirTable.class);
     private static final String TABLE_URL = "https://api.airtable.com/v0/app6e52Oq9b9YqhOQ/everything";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.'000Z'");
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    static {
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     @Autowired
     private SlackURLRepository urlRepository;
@@ -88,7 +92,7 @@ public class AirTable {
             request.put("Title", Optional.ofNullable(slackURL.getTitle()).orElse(""))
                     .put("Link", slackURL.getUrl())
                     .put("Description", Optional.ofNullable(slackURL.getDescription()).orElse(""))
-                    .put("Date", "2015-09-14T15:53:31.000Z")
+                    .put("Date", DATE_FORMAT.format(slackURL.getReferences().get(0).getDate()))
                     .put("channel", slackURL.getReferences().get(0).getChannel());
             String jsonRequest = mapper.writeValueAsString(jsonNodeFactory.objectNode().set("fields", request));
             log.debug("Airtable payload: {}", jsonRequest);
