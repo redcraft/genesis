@@ -33,4 +33,12 @@ public class Reference {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Reference{" +
+                "channel='" + channel + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

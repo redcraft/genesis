@@ -23,9 +23,12 @@ public class SlackURL {
     public SlackURL() {
     }
 
-    public SlackURL(String url, List<Reference> references) {
+    public SlackURL(String url, List<Reference> references, String title, String description, String imageURL) {
         this.url = url;
         this.references = references;
+        this.title = title;
+        this.description = description;
+        this.imageURL = imageURL;
     }
 
     public String getUrl() {
@@ -66,5 +69,16 @@ public class SlackURL {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    @Override
+    public String toString() {
+        return "SlackURL{" +
+                "url='" + url + '\'' +
+                ", references=" + references +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", imageURL='" + imageURL + '\'' +
+                '}';
     }
 }
