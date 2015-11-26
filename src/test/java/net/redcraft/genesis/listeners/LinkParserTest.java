@@ -3,6 +3,7 @@ package net.redcraft.genesis.listeners;
 import com.google.common.collect.ImmutableSet;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import net.redcraft.genesis.BlackList;
 import net.redcraft.genesis.domain.Reference;
 import net.redcraft.genesis.domain.SlackURL;
 import net.redcraft.genesis.utils.MetaDataExtractor;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,16 +52,17 @@ public class LinkParserTest {
     private static final String CHANNEL = "channel";
     private static final Date DATE = new Date();
 
-    private static final String MESSAGE = "<http://Red.com|red.com>";
+    private static final String MESSAGE = "<http://Red.com|red.com> some more text <http://max.com|max.com>";
     private static final String URL = "http://red.com";
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     private static final String IMAGE_URL = "imageURL";
+    private static final String BLACKED_URL = "http://max.com";
 
 
     @org.junit.Test
     public void testExtractURLs() throws Exception {
-        LinkParser linkParser = new LinkParser(null,null);
+        LinkParser linkParser = new LinkParser(null, null, null);
         for(int i = 0; i < messages.size(); ++i) {
             Set<String> extractedLinks = linkParser.extractURLs(messages.get(i));
             assertEquals(urlSets.get(i).size(), extractedLinks.size());
@@ -79,7 +82,11 @@ public class LinkParserTest {
         MetaDataExtractor extractor = mock(MetaDataExtractor.class);
         when(extractor.extract(URL)).thenReturn(slackURL);
 
-        LinkParser linkParser = new LinkParser(extractor, ImmutableSet.of(worker));
+        BlackList blackList = mock(BlackList.class);
+        when(blackList.isValid(anyString())).thenReturn(true);
+        when(blackList.isValid(BLACKED_URL)).thenReturn(false);
+
+        LinkParser linkParser = new LinkParser(extractor, ImmutableSet.of(worker), blackList);
 
         SlackChannel channel = mock(SlackChannel.class);
         when(channel.getName()).thenReturn(CHANNEL);

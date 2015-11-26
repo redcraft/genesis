@@ -4,7 +4,7 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
@@ -12,8 +12,8 @@ import java.util.Set;
 /**
  * Created by RED on 04/10/2015.
  */
-@Component
-public class SlackInit {
+@Service
+public class SlackService {
 
     @Autowired
     private SlackSession session;

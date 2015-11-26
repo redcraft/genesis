@@ -3,6 +3,7 @@ package net.redcraft.genesis.listeners;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
+import net.redcraft.genesis.BlackList;
 import net.redcraft.genesis.domain.Reference;
 import net.redcraft.genesis.utils.MetaDataExtractor;
 import net.redcraft.genesis.workers.SlackURLWorker;
@@ -28,18 +29,21 @@ public class LinkParser implements SlackMessagePostedListener {
     private static final Pattern PATTERN = Pattern.compile("<(http.+?)[>|]");
 
     private final MetaDataExtractor extractor;
+    private final BlackList blackList;
     private final Set<SlackURLWorker> workers;
 
     @Autowired
-    public LinkParser(MetaDataExtractor extractor, Set<SlackURLWorker> workers) {
+    public LinkParser(MetaDataExtractor extractor, Set<SlackURLWorker> workers, BlackList blackList) {
         this.extractor = extractor;
         this.workers = workers;
+        this.blackList = blackList;
     }
 
     @Override
     public void onEvent(SlackMessagePosted event, SlackSession session) {
         String channelName = event.getChannel().getName();
         extractURLs(event.getMessageContent()).stream()
+                .filter(blackList::isValid)
                 .map(extractor::extract)
                 .forEach(slackURL -> {
                     slackURL.setReferences(Arrays.asList(new Reference(channelName, new Date())));
