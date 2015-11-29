@@ -33,7 +33,7 @@ public class LinkParserTest {
             "<https://red.com|red.com>",
             "<http://red.com/|red.com/>",
             "<http://Red.com/|Red.com/>",
-            "I’m writing something and adding a link <http://red.com|red.com>",
+            "I’m writing something and adding a links <http://red.com|red.com>",
             "red <http://red.com|red.com> <http://max.com|max.com>"
     );
 
@@ -53,11 +53,13 @@ public class LinkParserTest {
     private static final Date DATE = new Date();
 
     private static final String MESSAGE = "<http://Red.com|red.com> some more text <http://max.com|max.com>";
+    private static final String prURL = "//red.com";
     private static final String URL = "http://red.com";
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     private static final String IMAGE_URL = "imageURL";
     private static final String BLACKED_URL = "http://max.com";
+    private static final Date LAST_POSTED = new Date();
 
 
     @org.junit.Test
@@ -73,7 +75,7 @@ public class LinkParserTest {
     @org.junit.Test
     public void testOnEvent() throws Exception {
         Reference reference = new Reference(CHANNEL, DATE);
-        SlackURL slackURL = new SlackURL(URL, null, TITLE, DESCRIPTION, IMAGE_URL);
+        SlackURL slackURL = new SlackURL(prURL, URL, null, TITLE, DESCRIPTION, IMAGE_URL, LAST_POSTED);
 
         SlackURLWorker worker = url -> {
             assertEquals(url, slackURL);

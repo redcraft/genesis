@@ -11,14 +11,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class MongoPersistenceURLWorker implements SlackURLWorker {
 
+    private final SlackURLRepository urlRepository;
+
     @Autowired
-    private SlackURLRepository urlRepository;
+    public MongoPersistenceURLWorker(SlackURLRepository urlRepository) {
+        this.urlRepository = urlRepository;
+    }
 
     @Override
     public void processURL(SlackURL slackURL) {
         SlackURL storedURL = urlRepository.findOne(slackURL.getUrl());
         if(storedURL != null) {
             storedURL.getReferences().addAll(slackURL.getReferences());
+            storedURL.setLastPosted(slackURL.getLastPosted());
         }
         else {
             storedURL = slackURL;

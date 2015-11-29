@@ -35,6 +35,25 @@ public class Reference {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Reference reference = (Reference) o;
+
+        if (!channel.equals(reference.channel)) return false;
+        return date.equals(reference.date);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = channel.hashCode();
+        result = 31 * result + date.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Reference{" +
                 "channel='" + channel + '\'' +
