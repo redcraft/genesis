@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * Created by RED on 15/11/2015.
  */
@@ -19,6 +21,8 @@ public class MetaDataExtractor {
     public SlackURL extract(String url) {
         SlackURL slackURL = new SlackURL();
         slackURL.setUrl(url);
+        slackURL.setPrURL(url.replaceAll("https?:",""));
+        slackURL.setLastPosted(new Date());
         try {
             Document doc = Jsoup.connect(url).get();
             Element titleElement = doc.select("title").first();
