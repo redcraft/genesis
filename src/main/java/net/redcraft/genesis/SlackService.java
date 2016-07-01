@@ -1,7 +1,9 @@
 package net.redcraft.genesis;
 
 import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.events.SlackConnected;
 import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
+import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,13 @@ public class SlackService {
 
     @PostConstruct
     public void setupListeners() throws GenesisException {
+
+	    session.addSlackConnectedListener(new SlackConnectedListener() {
+		    @Override
+		    public void onEvent(SlackConnected slackConnected, SlackSession slackSession) {
+			    System.out.println("User attached to slack: " + slackConnected.getConnectedPersona().getUserName());
+		    }
+	    });
 
         channelCreatedListeners.stream().forEach(session::addchannelCreatedListener);
 
