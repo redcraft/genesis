@@ -1,6 +1,7 @@
 package net.redcraft.genesis.utils;
 
 import net.redcraft.genesis.domain.SlackURL;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -37,8 +39,10 @@ public class MetaDataExtractor {
             if (imageElement != null) {
                 slackURL.setImageURL(imageElement.attr("content"));
             }
-        } catch (Exception e) {
-            log.debug("Can't parse URL {}", url, e);
+        } catch (HttpStatusException e) {
+            log.debug("Can't parse URL {}", url);
+        } catch (IOException e) {
+            log.debug("Can't parse HTML page located by URL {}", url, e);
         }
         return slackURL;
     }
