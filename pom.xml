@@ -37,12 +37,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
-			<groupId>com.ullink.slack</groupId>
-			<artifactId>simpleslackapi</artifactId>
-			<version>0.5.0</version>
-			<!--<version>0.6.0-SNAPSHOT</version>-->
+			<groupId>com.github.redcraft</groupId>
+			<artifactId>simple-slack-api</artifactId>
+			<version>-0.5.1-g04d2b29-75</version>
 		</dependency>
 
 		<dependency>

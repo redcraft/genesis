@@ -1,4 +1,4 @@
-package net.redcraft.genesis;
+package net.redcraft.genesis.repositories;
 
 import net.redcraft.genesis.domain.SlackURL;
 import org.springframework.data.mongodb.repository.MongoRepository;

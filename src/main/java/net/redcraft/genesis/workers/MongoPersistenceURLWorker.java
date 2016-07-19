@@ -1,7 +1,7 @@
 package net.redcraft.genesis.workers;
 
-import net.redcraft.genesis.SlackURLRepository;
 import net.redcraft.genesis.domain.SlackURL;
+import net.redcraft.genesis.repositories.SlackURLRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

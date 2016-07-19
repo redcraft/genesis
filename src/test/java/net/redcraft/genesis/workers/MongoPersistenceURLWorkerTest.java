@@ -1,8 +1,8 @@
 package net.redcraft.genesis.workers;
 
-import net.redcraft.genesis.SlackURLRepository;
 import net.redcraft.genesis.domain.Reference;
 import net.redcraft.genesis.domain.SlackURL;
+import net.redcraft.genesis.repositories.SlackURLRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;

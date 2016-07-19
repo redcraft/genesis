@@ -2,8 +2,6 @@ package net.redcraft.genesis;
 
 import ch.qos.logback.classic.net.SMTPAppender;
 
-import javax.mail.internet.InternetAddress;
-
 /**
  * Created by maxim on 18/7/16.
  */
