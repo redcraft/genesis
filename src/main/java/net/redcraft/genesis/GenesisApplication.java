@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({SlackConfig.class, SchedulerConfig.class})
+@Import({SlackConfig.class, SchedulerConfig.class, SecurityConfig.class})
 public class GenesisApplication {
 
     public static void main(String[] args) {
