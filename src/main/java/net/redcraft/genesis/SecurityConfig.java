@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
+	@Value("${security.enabled}")
+	private boolean isEnabled;
+
 	@Value("${security.user}")
 	private String user;
 
@@ -29,7 +32,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
+		if(isEnabled) {
+			http
 				.authorizeRequests()
 				.anyRequest()
 				.authenticated()
@@ -37,5 +41,12 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 				.httpBasic()
 				.and()
 				.csrf().disable();
+		}
+		else {
+			http
+				.anonymous()
+				.and()
+				.csrf().disable();
+		}
 	}
 }
