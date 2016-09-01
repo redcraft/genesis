@@ -38,8 +38,7 @@ public class DigestReference {
 
 		DigestReference digestReference = (DigestReference) o;
 
-		if (!url.equals(digestReference.url)) return false;
-		return digestURL.equals(digestReference.digestURL);
+		return url.equals(digestReference.url) && digestURL.equals(digestReference.digestURL);
 
 	}
 

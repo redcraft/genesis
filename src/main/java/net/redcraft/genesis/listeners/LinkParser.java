@@ -47,7 +47,7 @@ public class LinkParser implements SlackMessagePostedListener {
                 .map(extractor::extract)
                 .forEach(slackURL -> {
                     slackURL.setReferences(Arrays.asList(new Reference(channelName, new Date())));
-                    workers.stream().forEach(worker -> worker.processURL(slackURL));
+                    workers.forEach(worker -> worker.processURL(slackURL));
                 });
     }
 

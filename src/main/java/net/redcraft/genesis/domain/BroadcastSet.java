@@ -1,7 +1,5 @@
 package net.redcraft.genesis.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.List;
 
 /**

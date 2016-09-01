@@ -30,7 +30,7 @@ public class PresenceListener implements PresenceChangeListener {
 
 	@Autowired
 	public PresenceListener(ScheduledExecutorService scheduledExecutorService, DayActiveUsersRepository dayActiveUsersRepository) {
-		dayActiveUsersRepository.findAll().stream().forEach(usersSample -> samples.put(usersSample.getDate(), usersSample));
+		dayActiveUsersRepository.findAll().forEach(usersSample -> samples.put(usersSample.getDate(), usersSample));
 		scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
@@ -43,12 +43,8 @@ public class PresenceListener implements PresenceChangeListener {
 	public void onEvent(PresenceChange event, SlackSession session) {
 		String today = dateFormat.format(new Date());
 		synchronized (samples) {
-			if(samples.get(today) == null) {
-				samples.put(today, new ActiveUserSet(today, getActiveUsers(session)));
-			}
+			samples.putIfAbsent(today, new ActiveUserSet(today, getActiveUsers(session))).addUser(event.getUserId());
 		}
-		ActiveUserSet sample = samples.get(today);
-		sample.addUser(event.getUserId());
 	}
 
 	private Set<String> getActiveUsers(SlackSession session) {
