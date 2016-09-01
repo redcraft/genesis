@@ -2,6 +2,7 @@ package net.redcraft.genesis.domain;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,13 +13,15 @@ public class BroadcastGroup {
 	@Id
 	private String name;
 	private List<BroadcastSet> broadcastSets;
+	private Date date;
 
 	public BroadcastGroup() {
 	}
 
-	public BroadcastGroup(String name, List<BroadcastSet> broadcastSets) {
+	public BroadcastGroup(String name, List<BroadcastSet> broadcastSets, Date date) {
 		this.name = name;
 		this.broadcastSets = broadcastSets;
+		this.date = date;
 	}
 
 	public String getName() {
@@ -35,5 +38,13 @@ public class BroadcastGroup {
 
 	public void setBroadcastSets(List<BroadcastSet> broadcastSets) {
 		this.broadcastSets = broadcastSets;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }

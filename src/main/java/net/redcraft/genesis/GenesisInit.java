@@ -45,14 +45,14 @@ public class GenesisInit {
     @PostConstruct
     public void setupListeners() throws GenesisException {
 
-        channelCreatedListeners.stream().forEach(session::addchannelCreatedListener);
+        channelCreatedListeners.forEach(session::addchannelCreatedListener);
 
-        messagePostedListeners.stream().forEach(session::addMessagePostedListener);
+        messagePostedListeners.forEach(session::addMessagePostedListener);
 
-	    presenceChangeListeners.stream().forEach(session::addPresenceChangeListener);
+	    presenceChangeListeners.forEach(session::addPresenceChangeListener);
 
         new Thread(() -> {
-            session.getChannels().stream().forEach(slackChannel -> session.joinChannel(slackChannel.getName()));
+            session.getChannels().forEach(slackChannel -> session.joinChannel(slackChannel.getName()));
         }).start();
 
 	    executorService.scheduleWithFixedDelay(new ReferenceTracker(digestReferenceRepository), 0, 1, TimeUnit.DAYS);

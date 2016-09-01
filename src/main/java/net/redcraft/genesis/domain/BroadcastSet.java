@@ -8,18 +8,27 @@ import java.util.List;
  * Created by maxim on 25/8/16.
  */
 public class BroadcastSet {
+	private int id;
 	private List<String> users;
 	private List<BroadcastMessage> messages;
 
 	public BroadcastSet() {
 	}
 
-	public BroadcastSet(List<String> users, List<BroadcastMessage> messages) {
+	public BroadcastSet(int id, List<String> users, List<BroadcastMessage> messages) {
+		this.id = id;
 		this.users = users;
 		this.messages = messages;
 	}
 
-	@JsonIgnore
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public List<String> getUsers() {
 		return users;
 	}

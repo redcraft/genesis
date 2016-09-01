@@ -8,10 +8,10 @@ window.GenesisGroup = React.createClass({
 					</svg>
 				</a>
 				<div className="media-body">
-					<a href="#"><h4 className="media-heading">{this.props.name}</h4></a>
+					<a href="#"  onClick={() => this.props.selectGroup(this.props.name)}><h4 className="media-heading">{this.props.name}</h4></a>
 					<p>
-						Created at: 2016-05-12 <br />
-						<a href="">Delete</a>
+						Created at: {this.props.date} <br />
+						<a href="" onClick={() => this.props.deleteGroup(this.props.name)}>Delete</a>
 					</p>
 				</div>
 			</li>
