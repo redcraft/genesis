@@ -7,6 +7,7 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import net.redcraft.genesis.domain.*;
 import net.redcraft.genesis.repositories.BroadcastRepository;
+import net.redcraft.genesis.repositories.DayActiveUsersRepository;
 import net.redcraft.genesis.repositories.DigestReferenceRepository;
 import net.redcraft.genesis.repositories.SlackURLRepository;
 import org.slf4j.Logger;
@@ -36,6 +37,9 @@ public class GenesisAPI {
     private SlackURLRepository urlRepository;
 
     @Autowired
+    private DayActiveUsersRepository activeUsersRepository;
+
+    @Autowired
     private DigestReferenceRepository referenceRepository;
 
     @Autowired
@@ -50,7 +54,7 @@ public class GenesisAPI {
 
     @RequestMapping("/api/link")
     public List<SlackURL> getAllLinks() {
-        return urlRepository.findAll();
+        return urlRepository.findByDigestExists(false);
     }
 
     @RequestMapping("/api/reference")
@@ -58,6 +62,13 @@ public class GenesisAPI {
 	    String searchString = searchTerm.toLowerCase();
         return referenceRepository.findAll().stream()
 		        .filter(ref -> ref.getUrl().contains(searchString)).collect(Collectors.toList());
+    }
+
+    @RequestMapping("/api/stats")
+    public String getStats() {
+        return activeUsersRepository.findAll().stream()
+                .map(record -> record.getDate() + "," + record.getUserIDs().size())
+                .collect(Collectors.joining("\n"));
     }
 
     @RequestMapping(value = "/api/group", method = RequestMethod.POST, produces = "application/json")
