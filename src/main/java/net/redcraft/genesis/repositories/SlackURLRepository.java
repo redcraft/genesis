@@ -16,5 +16,5 @@ public interface SlackURLRepository extends MongoRepository<SlackURL, String> {
     @Override
     List<SlackURL> findAll();
 
-    List<SlackURL> findByDigestExists(boolean exists);
+//    List<SlackURL> findByDigestExists(boolean exists);
 }
