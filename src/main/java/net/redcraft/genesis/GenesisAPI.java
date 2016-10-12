@@ -52,10 +52,10 @@ public class GenesisAPI {
 	@Autowired
 	private ScheduledExecutorService executorService;
 
-    @RequestMapping("/api/link")
-    public List<SlackURL> getAllLinks() {
-        return urlRepository.findByDigestExists(false);
-    }
+//    @RequestMapping("/api/link")
+//    public List<SlackURL> getAllLinks() {
+//        return urlRepository.findByDigestExists(false);
+//    }
 
     @RequestMapping("/api/reference")
     public List<DigestReference> getReferences(@RequestParam("searchString") String searchTerm) {
