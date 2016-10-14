@@ -44,6 +44,11 @@ public class PresenceListener implements PresenceChangeListener {
 		String today = dateFormat.format(new Date());
 		synchronized (samples) {
 			samples.putIfAbsent(today, new ActiveUserSet(today, getActiveUsers(session))).addUser(event.getUserId());
+			if(samples.size() > 1) {
+				ActiveUserSet set = samples.get(today);
+				samples.clear();
+				samples.put(today, set);
+			}
 		}
 	}
 

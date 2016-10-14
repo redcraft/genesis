@@ -38,7 +38,6 @@ public class ReferenceTracker implements Runnable {
 			"^.*\\.png", "^.*\\.gif", "^.*\\.jpeg", "^.*\\.ico", "^.*\\.jpg", "^.*\\.svg", "^.*\\.js");
 
 	private final DigestReferenceRepository referenceRepository;
-	private final Set<DigestReference> digestReferences = new HashSet<>();
 
 	public ReferenceTracker(DigestReferenceRepository referenceRepository) {
 		this.referenceRepository = referenceRepository;
@@ -46,10 +45,6 @@ public class ReferenceTracker implements Runnable {
 
 	@Override
 	public void run() {
-		if(digestReferences.size() == 0) {
-			digestReferences.addAll(referenceRepository.findAll());
-		}
-
 		referenceRepository.save(getUrls(DIGEST_LIST_URL, DIGEST_URL_PATTERN)
 				.stream()
 				.filter(url -> url.length() < 300)
